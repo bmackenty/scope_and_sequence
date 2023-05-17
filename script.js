@@ -18,13 +18,34 @@ function shadeColor(color, percent) {
     return "#" + RR + GG + BB;
 }
 
+// Define the categories and their colors
+const categories = [
+    { name: 'Skills', color: '#FF9999' },
+    { name: 'Tools', color: '#9999FF' },
+    { name: 'Knowledge', color: '#99FF99' }
+];
+
+// make a color legend:
+const colorLegendContainer = document.getElementById('color-legend');
+
+categories.forEach(category => {
+    const legendItem = document.createElement('div');
+    legendItem.textContent = category.name;
+    legendItem.style.display = 'inline-block';
+    legendItem.style.margin = '10px';
+    legendItem.style.padding = '5px';
+    legendItem.style.color = category.color;
+    legendItem.style.border = '1px solid ' + category.color;
+    
+    colorLegendContainer.appendChild(legendItem);
+});
 
 const scopeSequenceData = [
     {
       label: 'Year 1',
       skills: ['Diagramming', 'Iteration', 'Conditionals'],
-      tools: ['Tool 1', 'Tool 2', 'Tool 3'],
-      knowledge: ['Knowledge 1', 'Knowledge 2', 'Knowledge 3']
+      tools: ['VS Code - basics', 'Terminal', 'Git'],
+      knowledge: ['Prog Basics', 'Development', 'Testing', 'Ask for Help']
     },
     {
       label: 'Year 3',
