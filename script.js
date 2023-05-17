@@ -1,3 +1,24 @@
+function shadeColor(color, percent) {
+    var R = parseInt(color.substring(1, 3), 16);
+    var G = parseInt(color.substring(3, 5), 16);
+    var B = parseInt(color.substring(5, 7), 16);
+
+    R = parseInt(R * (100 + percent) / 100);
+    G = parseInt(G * (100 + percent) / 100);
+    B = parseInt(B * (100 + percent) / 100);
+
+    R = (R < 255) ? R : 255;  
+    G = (G < 255) ? G : 255;  
+    B = (B < 255) ? B : 255;  
+
+    var RR = ((R.toString(16).length == 1) ? "0" + R.toString(16) : R.toString(16));
+    var GG = ((G.toString(16).length == 1) ? "0" + G.toString(16) : G.toString(16));
+    var BB = ((B.toString(16).length == 1) ? "0" + B.toString(16) : B.toString(16));
+
+    return "#" + RR + GG + BB;
+}
+
+
 const scopeSequenceData = [
     {
       label: 'Year 1',
@@ -27,26 +48,27 @@ const scopeSequenceData = [
     const allTools = Array.from(new Set(scopeSequenceData.flatMap(year => year.tools)));
     const allKnowledge = Array.from(new Set(scopeSequenceData.flatMap(year => year.knowledge)));
   
-    const generateDataForCategory = (categoryItems, dataKey, labelKey, heightMultiplier) => (
-      categoryItems.map(item => ({
-        label: item,
-        data: scopeSequenceData.map((year, index) => year[dataKey].includes(item) ? (index + 1) * heightMultiplier : 0),
-        stack: dataKey
-      }))
+    const generateDataForCategory = (categoryItems, dataKey, labelKey, heightMultiplier, baseColor) => (
+        categoryItems.map((item, index) => ({
+            label: item,
+            backgroundColor: shadeColor(baseColor, index * 10),
+            data: scopeSequenceData.map((year, index) => year[dataKey].includes(item) ? (index + 1) * heightMultiplier : 0),
+            stack: dataKey
+        }))
     );
   
     Chart.register(ChartDataLabels); // Register the plugin
   
     const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: scopeSequenceData.map(year => year.label),
-        datasets: [
-          ...generateDataForCategory(allSkills, 'skills', 'label', 1),
-          ...generateDataForCategory(allTools, 'tools', 'label', 1),
-          ...generateDataForCategory(allKnowledge, 'knowledge', 'label', 1)
-        ]
-      },
+        type: 'bar',
+        data: {
+            labels: scopeSequenceData.map(year => year.label),
+            datasets: [
+                ...generateDataForCategory(allSkills, 'skills', 'label', 1, '#FF9999'), // Light red shades for skills
+                ...generateDataForCategory(allTools, 'tools', 'label', 1, '#9999FF'), // Light blue shades for tools
+                ...generateDataForCategory(allKnowledge, 'knowledge', 'label', 1, '#99FF99') // Light green shades for knowledge
+            ]
+        },
       options: {
         scales: {
           x: { stacked: true },
